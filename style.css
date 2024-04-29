@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav {
+    min-height: 8vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #5d4954;
+    font-family: "Poppins", sans-serif;
+}
+
+.logo {
+    font-size: 30px;
+    color: rgb(226, 226, 226);
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around; /*de ezt lehet úgy is, hogy az li-nek adunk egy padding-et akkor is eltávolodnak egymástól*/
+    width: 30%;
+    /*
+    nagyon fontos, hogy aggyunk ennek egy width-et, mert az ul-nek alig van width-je és akkor müködik a justify-content: space-around
+    */
+}
+
+.nav-links li {
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgb(226, 226, 226);
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+/*
+ezzel csináljuk a burger-menu-t, úgy, hogy nem töltöttünk le ikon-t hozzá 
+*/
+
+.burger {
+    display: none; /*hogy az majd csak mobilnézetben legyen látható*/
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: rgb(226, 226, 226); /*fontos, hogy itt ne color legyen, hanem background-color, hogy látgatók legyenek*/
+    margin: 5px;
+    /*
+    fontos, hogy legyen ez az 5px-es margin vagy különben a div-ek nem távolodnak majd el egymástól és akkor nem burger menü lesz 
+    hanem egy egybefüggő valami!!!!!! 
+    */
+    transition: all 0.3s ease;
+}
+
+/*
+az ul-ben lévő valamik az össze fognak menni, mert úgy adtuk meg neki a width-et, hogy %-ban és ha húzzuk befele a képernyőt, akkor 
+egymsához közelítenek majd, ezért egy media query-vel majd egy kisebb max-width-en egy nagyobb width-et fog kapni 
+de ugye nagy képernyőn meg elég az eredeti 30%, mert ott meg az nézne ki rosszul, ha nagyobb lenne 
+*/
+@media screen and (max-width: 1024px) {
+    nav ul {
+        width: 60%;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    /*
+    ez kb. a tablet-nek a szélessége
+    azt akarjuk, hogy ezek a nav li-k ezek ne legyen ott majd mobilnézeten hanem alatta ezért lesz majd a top: 8vh, mert ennyi a nav height-ja
+    */
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .nav-links {
+        position: absolute;
+        right: 0;
+        top: 8vh;
+        height: 92vh; /*ez meg a teljes látható magasság a nav 8vh-t kivonva*/
+        background-color: #5d4954;
+        /*
+        és akkor ott van mobilnézeten ez a valami és benne a tetején egymás mellett az li-k, 
+        azt akarjuk, hogy ezek egymás alatt legyen, ezért flex és a column a direction
+        */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /*
+        column-nál figyelni kell, hogy megcserélődik a justify-content és az align-items !!!!
+        */
+        width: 50%; 
+        /*
+        ezzel lehet játszani, hogy mekkora helyet vegyen fel szélességben
+        lehet ez akár full screen is -> width: 100%
+        */
+        transform: translateX(100%); 
+        /*
+        ezzel tüntetjük el, visszük ki a képernyőből, hogy alapból ne lehessen látni, majd csak akkor, hogyha rányomunk a burger valamire
+        fontos, hogy ehhez kell egy overflow-x: hidden, mert akkor nem lesz scroll és nem tudunk majd jobbra menni ahol a menü most van!! 
+        body {
+            overflow-x: hidden;
+        }
+        */
+        /*
+        meg el akarjuk azt is tüntetni, hogy ne látszodjon az li és amikor rákattintunk a burger-re, akkor majd valami keyframe-vel 
+        jelenjen meg lassan (opacity-s dolog)
+        */
+        transition: transform 0.5s ease-in;
+        /*
+        ugye, ha rákattintunk, akkor az ul-en lesz egy nav-active meg ez a nav-links classt és mivel ott van egy transform
+        itt a transition-vel megadjuk, hogy legyen a transform -> ease-in 0.5s
+        */
+    }
+    .nav-links li {
+        opacity: 0;
+    }
+
+    .burger {
+        display: block; 
+        /*
+        megjelenítjük a burger-es valamit és mivel a nav flex space-around, ezért szépen a burger meg a logo az lesz
+        */
+        cursor: pointer;
+    }
+
+    /*
+    amikor rákattintunk a burger-re, akkor csak azt akarjuk, hogy ez a transform: translateX(100%); ezt visszarakjuk 0-ra 
+    és akkor látszani fog
+    */
+    .nav-active {
+        transform: translateX(0%);
+        /*
+        és lesz egy transition is a nav ul-ben, mert azt akatrjuk, hogy ez szépen jöjjön be, ne csak egyszer megjelenjen!!! 
+        */
+    }
+
+    /*
+    csinálunk egy animation-t, hogy leszedjük az opacity 0-át a nav-links-li-ről 
+    */
+
+    @keyframes navLinkFade {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0px);
+        }
+    }
+    /*
+    és ezt az animation-t majd meg kell adni a JavaScript-ben a li-knek, amik ugye jelenleg el vannak tüntetve
+    */
+
+    /*
+    utolsó dolog, hogy megváltoztassuk a burger menüt, ezért van minden div-nek egy külön class
+
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+
+    és mindegyik sorra különbözőt szeretnénk 
+    */
+
+    .toggle .line-1 {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .toggle .line-2 {
+        opacity: 0; /*ezt meg eltüntetjük*/
+    }
+    .toggle .line-3 {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+    /*
+    és akkor ide, is csinálunk egy transition a .burger div-re, mert ugye azokra van ez csinálva!!! 
+    .burger div {
+    width: 25px;
+    height: 3px;
+    background-color: rgb(226, 226, 226); 
+    margin: 5px;
+    transition: all 0.3s ease;
+    }
+    */
+    
+}
